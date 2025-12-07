@@ -1,68 +1,73 @@
-import { useEffect, useState } from "react";
-import { getPrice } from "../Services/api";
+import React, { useState, useEffect, useCallback } from "react";
 
 const Dashboard = () => {
-  const stockList = ["AAPL", "TSLA", "AMZN", "GOOGL", "MSFT", "NVDA"];
-  
+  const [symbols, setSymbols] = useState(["AAPL", "TSLA", "AMZN", "MSFT", "GOOG"]);
   const [prices, setPrices] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const fetchAllPrices = async () => {
+  const API_KEY = process.env.REACT_APP_ALPHAVANTAGE_KEY;
+
+  // -----------------------------------------
+  // FETCH ALL PRICES (wrapped in useCallback)
+  // -----------------------------------------
+  const fetchAllPrices = useCallback(async () => {
     setLoading(true);
     setError("");
 
     try {
       const results = {};
 
-      for (let symbol of stockList) {
-        const data = await getPrice(symbol);
+      for (const symbol of symbols) {
+        const res = await fetch(
+          `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${API_KEY}`
+        );
 
-        if (data && data["05. price"]) {
-          results[symbol] = parseFloat(data["05. price"]);
-        } else {
-          results[symbol] = null;
-        }
+        const data = await res.json();
+        const price = data["Global Quote"]?.["05. price"];
+
+        results[symbol] = price || "N/A";
       }
 
       setPrices(results);
     } catch (err) {
-      setError("Error loading market data. Try again later.");
+      setError("Failed to fetch stock data. Please try again later.");
     }
 
     setLoading(false);
-  };
+  }, [symbols, API_KEY]);
 
-useEffect(() => {
-  fetchAllPrices();
-}, [fetchAllPrices]);
+  // -----------------------------------------
+  // FETCH PRICES ON LOAD
+  // -----------------------------------------
+  useEffect(() => {
+    fetchAllPrices();
+  }, [fetchAllPrices]);
 
-
+  // -----------------------------------------
+  // UI
+  // -----------------------------------------
   return (
-    <div className="page">
-      <h1>Market Overview</h1>
-      <p style={{ marginBottom: "20px" }}>
-        Live prices powered by AlphaVantage API
-      </p>
+    <div className="dashboard-container">
+      <h1>Market Dashboard</h1>
 
-      {loading && <div className="loader"></div>}
+      {loading && <p className="loading">Loading stock prices...</p>}
       {error && <p className="error">{error}</p>}
 
-      <div className="stock-grid">
-        {stockList.map((symbol) => (
-          <div key={symbol} className="stock-card">
-            <h3>{symbol}</h3>
-
-            {prices[symbol] === null ? (
-              <p className="error">N/A</p>
-            ) : (
-              <p className="price">
-                {loading ? "Loading..." : `$${prices[symbol]}`}
-              </p>
-            )}
+      <div className="stock-list">
+        {symbols.map((symbol) => (
+          <div className="stock-card" key={symbol}>
+            <h2>{symbol}</h2>
+            <p className="price">
+              {prices[symbol] !== "N/A" ? `$${prices[symbol]}` : "N/A"}
+            </p>
           </div>
         ))}
       </div>
+
+      <button className="refresh-btn" onClick={fetchAllPrices}>
+        Refresh Prices
+      </button>
     </div>
   );
 };
