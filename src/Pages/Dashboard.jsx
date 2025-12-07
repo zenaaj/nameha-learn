@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 
 const Dashboard = () => {
-  const [symbols, setSymbols] = useState(["AAPL", "TSLA", "AMZN", "MSFT", "GOOG"]);
+  const [symbols] = useState(["AAPL", "TSLA", "AMZN", "MSFT", "GOOG"]);
   const [prices, setPrices] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
