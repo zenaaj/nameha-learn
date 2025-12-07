@@ -68,11 +68,17 @@ This project was developed as part of the CPIT405 Web Development course.
 
 ## 🗂️ Project Structure
 nameha-learn/
+
 ├── public/ # Static assets (index.html, icons)
+
 ├── src/
+
 │ ├── Components/ # ProtectedRoute and reusable components
+
 │ ├── Context/ # AuthContext for global state
+
 │ ├── Pages/ # Dashboard, Simulator, Portfolio, Login, Register
+
 │ ├── services/ # API functions (AlphaVantage)
 │ ├── styles/ # CSS files
 │ ├── App.js # App root component
