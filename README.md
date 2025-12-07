@@ -7,7 +7,7 @@ This project was developed as part of the CPIT405 Web Development course.
 ---
 
 ## 🚀 Live Demo
-🔗 **[https://YOUR-DEPLOYED-SITE.netlify.app](https://69359b97e6241689e48cc8a5--stupendous-tartufo-2f6302.netlify.app)**  
+🔗 **[https://69359b97e6241689e48cc8a5--stupendous-tartufo-2f6302.netlify.app]**  
 
 
 ---
