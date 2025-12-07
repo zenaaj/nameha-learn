@@ -33,9 +33,10 @@ const Dashboard = () => {
     setLoading(false);
   };
 
-  useEffect(() => {
-    fetchAllPrices();
-  }, []);
+useEffect(() => {
+  fetchAllPrices();
+}, [fetchAllPrices]);
+
 
   return (
     <div className="page">
